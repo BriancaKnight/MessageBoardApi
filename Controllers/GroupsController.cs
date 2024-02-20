@@ -75,5 +75,19 @@ private bool GroupExists(int id)
   return _db.Groups.Any(e => e.GroupId == id);
 }
   
+[HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteGroup(int id)
+    {
+      Group group = await _db.Groups.FindAsync(id);
+      if (group == null)
+      {
+        return NotFound();
+      }
+
+      _db.Groups.Remove(group);
+      await _db.SaveChangesAsync();
+
+      return NoContent();
+    }
 }
 }
