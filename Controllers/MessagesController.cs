@@ -16,7 +16,6 @@ public class MessagesController : ControllerBase
     _db = db;
   }
 
-  
 [HttpGet]
 public async Task<ActionResult<IEnumerable<Message>>> Get()
 {
@@ -24,9 +23,9 @@ public async Task<ActionResult<IEnumerable<Message>>> Get()
 }
 
 [HttpGet("{id}")]
-public async Task<ActionResult<Message>> GetMessage(int messageId)
+public async Task<ActionResult<Message>> GetMessage(int id)
 {
-  Message message = await _db.Messages.FindAsync(messageId);
+  Message message = await _db.Messages.FindAsync(id);
 
   if (message == null)
   {

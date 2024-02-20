@@ -16,8 +16,6 @@ public class GroupsController : ControllerBase
     _db = db;
   }
 
-
-
 [HttpGet]
 public async Task<ActionResult<IEnumerable<Group>>> Get()
 {
@@ -25,9 +23,9 @@ public async Task<ActionResult<IEnumerable<Group>>> Get()
 }
 
 [HttpGet("{id}")]
-public async Task<ActionResult<Group>> GetGroup(int groupId)
+public async Task<ActionResult<Group>> GetGroup(int id)
 {
-  Group group = await _db.Groups.FindAsync(groupId);
+  Group group = await _db.Groups.FindAsync(id);
 
   if (group == null)
   {
@@ -35,6 +33,47 @@ public async Task<ActionResult<Group>> GetGroup(int groupId)
   }
   return group;
 }
+
+[HttpPost]
+public async Task<ActionResult<Group>> Post(Group group)
+{
+  _db.Groups.Add(group);
+  await _db.SaveChangesAsync();
+  return CreatedAtAction(nameof(GetGroup), new { id = group.GroupId }, group);
 }
 
+
+[HttpPut("{id}")]
+public async Task<IActionResult> Put(int id, Group group)
+{
+  if (id != group.GroupId)
+  { 
+    return BadRequest();
+  }
+
+  _db.Groups.Update(group);
+
+  try
+  {
+    await _db.SaveChangesAsync();
+  }
+  catch(DbUpdateConcurrencyException)
+  {
+    if (!GroupExists(id))
+    {
+      return NotFound();
+    }
+    else
+    {
+      throw;
+    }
+  }
+  return NoContent();
+}
+private bool GroupExists(int id)
+{
+  return _db.Groups.Any(e => e.GroupId == id);
+}
+  
+}
 }
