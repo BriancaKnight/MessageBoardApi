@@ -17,9 +17,14 @@ public class MessagesController : ControllerBase
   }
 
 [HttpGet]
-public async Task<ActionResult<IEnumerable<Message>>> Get()
+public async Task<ActionResult<IEnumerable<Message>>> Get(int groupId)
 {
-  return await _db.Messages.ToListAsync();
+  IQueryable<Message> query = _db.Messages.AsQueryable();
+  if (groupId != 0)
+  {
+    query = query.Where(entry => entry.GroupId == groupId);
+  }
+  return await query.ToListAsync();
 }
 
 [HttpGet("{id}")]
