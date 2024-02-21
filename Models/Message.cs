@@ -8,6 +8,7 @@ namespace MessageBoardApi.Models
     
     public string UserId { get; set; }
     public int GroupId { get; set; }
+    [Required(ErrorMessage = "Text is required.")]
     public string Text { get; set; }
     public DateTime Date { get; set; }
 
